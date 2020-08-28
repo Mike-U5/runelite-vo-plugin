@@ -2,8 +2,7 @@ package net.runelite.client.plugins.npcvo;
 
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
-import net.runelite.api.NpcID;
-import net.runelite.api.events.GameTick;
+import net.runelite.api.events.*;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.chat.ChatColorType;
 import net.runelite.client.chat.ChatMessageBuilder;
@@ -28,10 +27,34 @@ public class NpcVoPlugin extends Plugin {
     @Inject
     private ChatMessageManager chatMessageManager;
 
+    private boolean newDialogueOpened = false;
+
+    // Tracks if a new NPC Dialogue box was opened
+    @Subscribe
+    public void onWidgetLoaded(final WidgetLoaded event) {
+        if (event.getGroupId() == 231) { // Npc Dialogue
+            this.newDialogueOpened = true;
+        }
+        sendChatMessage("Widget: " + event.getGroupId());
+    }
+
+    @Subscribe
+    public void onMenuOptionClicked(MenuOptionClicked menuOpt) {
+        // Let's assume any option closes dialog for now
+    }
+
+    // If a new dialogue box was opened, call our own function
     @Subscribe
     public void onGameTick(GameTick tick) {
-        String npcName = "";
-        String text = "";
+        if (newDialogueOpened) {
+            newDialogueOpened = false;
+            this.newDialogueBoxIsShown();
+        }
+    }
+
+    private void newDialogueBoxIsShown() {
+        String npcName = "DIO";
+        String text = "KONO DIO DA!";
         int modelID = -1;
 
         if (client.getWidget(WidgetInfo.DIALOG_NPC) != null) {
@@ -45,33 +68,33 @@ public class NpcVoPlugin extends Plugin {
         }
 
         if (modelID >= 0) {
-            sendChatMessage("[" + modelID + "] " + npcName);
-            System.out.println(NpcList.LumbyCook.get(text));
-            System.out.println(NpcList.LumbyCook.get("ar02"));
+            sendChatMessage("[" + modelID + "] " + npcName + ": " + text);
         }
 
-        if (NpcID.COOK_4626 == modelID) { // Lumby Castle Cook
-            final String voiceClip = NpcList.LumbyCook.get(text);
-            final VoiceThread voRunnable = new VoiceThread();
-            voRunnable.setVOLine(voiceClip);
-            final Thread voThread = new Thread(voRunnable);
-            voThread.start();
-            sendChatMessage("Voice Clip: " + voiceClip);
+        final CharacterBase character = NpcList.chars.get(modelID);
+        if (character != null) {
+            final String voiceClip = character.getVo(text);
+            if (voiceClip != null) {
+                final VoiceThread voRunnable = new VoiceThread();
+                voRunnable.setVOLine(voiceClip);
+                final Thread voThread = new Thread(voRunnable);
+                voThread.start();
+            }
+            ///sendChatMessage("Voice Clip: " + voiceClip);
         }
     }
 
-    private void sendChatMessage(String chatMessage)
-    {
+    private void sendChatMessage(String chatMessage) {
         final String message = new ChatMessageBuilder()
-                .append(ChatColorType.HIGHLIGHT)
-                .append(chatMessage)
-                .build();
+            .append(ChatColorType.HIGHLIGHT)
+            .append(chatMessage)
+            .build();
 
         chatMessageManager.queue(
-                QueuedMessage.builder()
-                        .type(ChatMessageType.CONSOLE)
-                        .runeLiteFormattedMessage(message)
-                        .build());
+            QueuedMessage.builder()
+                .type(ChatMessageType.CONSOLE)
+                .runeLiteFormattedMessage(message)
+                .build());
     }
 
 }

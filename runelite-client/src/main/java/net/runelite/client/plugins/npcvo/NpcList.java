@@ -1,15 +1,15 @@
 package net.runelite.client.plugins.npcvo;
 
+import net.runelite.api.NpcID;
+import net.runelite.client.plugins.npcvo.characters.Achietties;
+import net.runelite.client.plugins.npcvo.characters.LumbyCook;
+
 import java.util.HashMap;
-import java.util.Map;
 
 public class NpcList {
-    public static Map<String, String> LumbyCook = new HashMap<>();
+    public static HashMap<Integer, CharacterBase> chars = new HashMap<Integer, CharacterBase>();
     static {
-        LumbyCook.put(
-            "Seriously, you were great!<br>I can't believe I nearly caused all of those people to be<br>killed!",
-            "KONO DIO DA"
-        );
-        LumbyCook.put("ar02", "Some article");
+        chars.put(NpcID.COOK_4626, new LumbyCook());
+        chars.put(NpcID.ACHIETTIES, new Achietties());
     }
 }
