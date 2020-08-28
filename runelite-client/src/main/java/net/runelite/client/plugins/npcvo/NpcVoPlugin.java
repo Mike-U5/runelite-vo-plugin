@@ -75,7 +75,7 @@ public class NpcVoPlugin extends Plugin {
         if (character != null) {
             final String voiceClip = character.getVo(text);
             if (voiceClip != null) {
-                final VoiceThread voRunnable = new VoiceThread();
+                final VoRunnable voRunnable = new VoRunnable();
                 voRunnable.setVOLine(voiceClip);
                 final Thread voThread = new Thread(voRunnable);
                 voThread.start();

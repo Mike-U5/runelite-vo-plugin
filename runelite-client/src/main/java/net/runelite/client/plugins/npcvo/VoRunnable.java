@@ -5,7 +5,7 @@ import lombok.SneakyThrows;
 
 import java.io.FileInputStream;
 
-public class VoiceThread implements Runnable {
+public class VoRunnable implements Runnable {
     private Player audioPlayer;
     private String voLine;
 
