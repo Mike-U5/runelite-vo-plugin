@@ -3,7 +3,8 @@ package net.runelite.client.plugins.npcvo.characters;
 import net.runelite.client.plugins.npcvo.CharacterBase;
 
 public class LumbyCook extends CharacterBase {
-    public LumbyCook() {
+    @Override
+    protected void populateMap() {
         this.map.put(
             "Seriously, you were great!<br>I can't believe I nearly caused all of those people to be<br>killed!",
             "KONO DIO DA"

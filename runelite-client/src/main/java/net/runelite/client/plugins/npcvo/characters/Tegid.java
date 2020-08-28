@@ -2,18 +2,15 @@ package net.runelite.client.plugins.npcvo.characters;
 
 import net.runelite.client.plugins.npcvo.CharacterBase;
 
-public class Achietties extends CharacterBase {
-
+public class Tegid extends CharacterBase {
     @Override
     protected void populateMap() {
-        this.map.put(
-            "Greetings. Welcome to the Heroes' Guild.",
-            "greetings1"
-        );
+        this.map.put("Yes. What is it to you?", "talk1");
+        this.map.put("I suppose it is.", "talk2");
     }
 
     @Override
     protected String getFolder() {
-        return "Achietties";
+        return "Tegid";
     }
 }

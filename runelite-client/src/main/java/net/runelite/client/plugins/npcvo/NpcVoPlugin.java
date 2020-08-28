@@ -1,5 +1,6 @@
 package net.runelite.client.plugins.npcvo;
 
+import javazoom.jl.player.Player;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.events.*;
@@ -17,7 +18,7 @@ import javax.inject.Inject;
 @PluginDescriptor(
     name = "Test Plugin",
     description = "Kono Dio Da",
-    tags = {"highlight", "lines", "unaggro", "aggro", "aggressive", "npcs", "area", "slayer"},
+    tags = {"voice", "lines", "npcs", "sound"},
     enabledByDefault = false
 )
 
@@ -26,7 +27,8 @@ public class NpcVoPlugin extends Plugin {
     private Client client;
     @Inject
     private ChatMessageManager chatMessageManager;
-
+    private Thread voThread;
+    private VoRunnable voRunnable;
     private boolean newDialogueOpened = false;
 
     // Tracks if a new NPC Dialogue box was opened
@@ -35,12 +37,6 @@ public class NpcVoPlugin extends Plugin {
         if (event.getGroupId() == 231) { // Npc Dialogue
             this.newDialogueOpened = true;
         }
-        sendChatMessage("Widget: " + event.getGroupId());
-    }
-
-    @Subscribe
-    public void onMenuOptionClicked(MenuOptionClicked menuOpt) {
-        // Let's assume any option closes dialog for now
     }
 
     // If a new dialogue box was opened, call our own function
@@ -50,38 +46,52 @@ public class NpcVoPlugin extends Plugin {
             newDialogueOpened = false;
             this.newDialogueBoxIsShown();
         }
+        if (client.getWidget(WidgetInfo.DIALOG_NPC_HEAD_MODEL) == null) {
+            this.stopActiveVo();
+        }
     }
 
     private void newDialogueBoxIsShown() {
-        String npcName = "DIO";
-        String text = "KONO DIO DA!";
+        String text = "You fell for it fool! Thunder Cross Split Attack!";
         int modelID = -1;
 
-        if (client.getWidget(WidgetInfo.DIALOG_NPC) != null) {
-            npcName = client.getWidget(WidgetInfo.DIALOG_NPC).getName();
-        }
         if (client.getWidget(WidgetInfo.DIALOG_NPC_TEXT) != null) {
-            text = client.getWidget(WidgetInfo.DIALOG_NPC_TEXT).getText();
+            text = this.strip(client.getWidget(WidgetInfo.DIALOG_NPC_TEXT).getText());
         }
         if (client.getWidget(WidgetInfo.DIALOG_NPC_HEAD_MODEL) != null) {
             modelID = client.getWidget(WidgetInfo.DIALOG_NPC_HEAD_MODEL).getModelId();
         }
 
         if (modelID >= 0) {
-            sendChatMessage("[" + modelID + "] " + npcName + ": " + text);
+            sendChatMessage("[" + modelID + "] " + text);
         }
 
         final CharacterBase character = NpcList.chars.get(modelID);
         if (character != null) {
             final String voiceClip = character.getVo(text);
             if (voiceClip != null) {
-                final VoRunnable voRunnable = new VoRunnable();
-                voRunnable.setVOLine(voiceClip);
-                final Thread voThread = new Thread(voRunnable);
-                voThread.start();
+                this.setActiveVo(voiceClip);
             }
-            ///sendChatMessage("Voice Clip: " + voiceClip);
         }
+    }
+
+    private void stopActiveVo() {
+        if (this.voThread != null && this.voThread.isAlive()) {
+            this.voRunnable.stopSound();
+        }
+    }
+
+    private void setActiveVo(String voiceClip) {
+        this.stopActiveVo();
+        this.voRunnable = new VoRunnable();
+        this.voRunnable.setVOLine(voiceClip);
+        this.voThread = new Thread(this.voRunnable);
+        this.voThread.start();
+    }
+
+    // Strip out comma's and HTML Tags
+    private String strip(final String str) {
+        return str.replace("lt>br<gt", " ");
     }
 
     private void sendChatMessage(String chatMessage) {
