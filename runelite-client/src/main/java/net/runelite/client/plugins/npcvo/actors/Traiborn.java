@@ -1,8 +1,8 @@
-package net.runelite.client.plugins.npcvo.characters;
+package net.runelite.client.plugins.npcvo.actors;
 
-import net.runelite.client.plugins.npcvo.CharacterBase;
+import net.runelite.client.plugins.npcvo.ActorBase;
 
-public class Traiborn extends CharacterBase {
+public class Traiborn extends ActorBase {
     @Override
     protected void populateMap() {
         this.map.put("Ello young thingummywut.", "talk1");

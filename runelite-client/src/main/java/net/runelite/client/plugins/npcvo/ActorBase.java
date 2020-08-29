@@ -3,11 +3,11 @@ package net.runelite.client.plugins.npcvo;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class CharacterBase {
+public abstract class ActorBase {
     protected final Map<String, String> map = new HashMap<>();
 
-    protected CharacterBase() {
-       this.populateMap();
+    protected ActorBase() {
+        this.populateMap();
     }
 
     public String getVo(String dialog) {
