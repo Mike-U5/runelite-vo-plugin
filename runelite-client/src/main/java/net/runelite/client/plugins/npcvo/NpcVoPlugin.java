@@ -68,7 +68,7 @@ public class NpcVoPlugin extends Plugin {
         ///}
 
         if (modelID >= 0) {
-            final ActorBase character = NpcList.chars.get(modelID);
+            final ActorBase character = NpcList.actors.get(modelID);
             if (character != null) {
                 final String voiceClip = character.getVo(text);
                 if (voiceClip != null) {

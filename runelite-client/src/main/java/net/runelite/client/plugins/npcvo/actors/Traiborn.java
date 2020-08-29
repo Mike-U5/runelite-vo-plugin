@@ -17,11 +17,10 @@ public class Traiborn extends ActorBase {
         this.map.put("Cheerio then. It was nice chatting to you.", "");
         this.map.put("Don't be ridiculous. No-one has ever seen one.", "ramble1");
         this.map.put("They're invisible, or a myth, or a figment of my imagination. Can't remember which right now.", "ramble2");
-
     }
 
     @Override
     protected String getFolder() {
-        return "WizardTraiborn";
+        return "Traiborn";
     }
 }
