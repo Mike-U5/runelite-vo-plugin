@@ -34,8 +34,7 @@ public class NpcVoPlugin extends Plugin {
     private boolean newDialogueOpened = false;
 
     @Override
-    protected void startUp()
-    {
+    protected void startUp() {
         printMap(NpcList.strings);
     }
 
@@ -43,9 +42,8 @@ public class NpcVoPlugin extends Plugin {
         final Iterator it = map.entrySet().iterator();
         while (it.hasNext()) {
             final Map.Entry pair = (Map.Entry)it.next();
-            ///this.debugChatMessage(pair.getKey() + " = " + pair.getValue());
             this.debugChatMessage((String) pair.getValue());
-            it.remove(); // avoids a ConcurrentModificationException
+            it.remove();
         }
         this.debugChatMessage("~~ " + map.size() + " ~~");
     }
@@ -76,7 +74,7 @@ public class NpcVoPlugin extends Plugin {
         int modelID = -1;
 
         if (client.getWidget(WidgetInfo.DIALOG_NPC_TEXT) != null) {
-            text = this.strip(client.getWidget(WidgetInfo.DIALOG_NPC_TEXT).getText());
+            text = TextUtil.cleanDialogue(client.getWidget(WidgetInfo.DIALOG_NPC_TEXT).getText());
         }
         if (client.getWidget(WidgetInfo.DIALOG_NPC_HEAD_MODEL) != null) {
             modelID = client.getWidget(WidgetInfo.DIALOG_NPC_HEAD_MODEL).getModelId();
@@ -111,11 +109,6 @@ public class NpcVoPlugin extends Plugin {
         this.sndPlayer.setVOLine(sndPath);
         this.sndThread = new Thread(this.sndPlayer);
         this.sndThread.start();
-    }
-
-    // Strip out newlines from text
-    private String strip(String str) {
-        return str.replaceAll("<.*?>", " ");
     }
 
     // For testing purposes

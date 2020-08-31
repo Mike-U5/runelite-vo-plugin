@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.regex.Pattern;
 
 // TODO: Use JSON instead?
 
@@ -30,8 +29,6 @@ public class NpcList {
                         e.printStackTrace();
                     }
                 }
-            } else {
-                System.out.println(entry.getName());
             }
         }
     }
@@ -63,14 +60,14 @@ public class NpcList {
             final String[] parts = line.split(":(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"); // Thanks Rohit Jain
             // Should produce two parts, if not line is not correct and should be skipped
             if (parts.length == 2) {
-                final String key = NpcList.stripQuotes(parts[0]);
+                final String key = TextUtil.cleanDialogue(NpcList.stripQuotes(parts[1]));
                 final String name = NpcList.stripQuotes(parts[1]);
 
                 //NpcList.strings.put("_"+key, name + "{" + name.length() + "}");
 
                 // Check if provided name is valid
                 if (key != null && name != null && name.length() < 250 && name.matches("^[a-zA-Z0-9_]+$")) {
-                    NpcList.strings.put(key, name);
+                    NpcList.strings.put(TextUtil.cleanDialogue(key), name);
                 }
             }
         }
