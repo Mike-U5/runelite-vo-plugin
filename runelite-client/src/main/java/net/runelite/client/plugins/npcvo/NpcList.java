@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 // TODO: Use JSON instead?
 
@@ -54,6 +55,7 @@ public class NpcList {
 
         // Init Buffered Reader
         final BufferedReader br = new BufferedReader(new FileReader(file));
+        final Map<String, String> character = new HashMap();
 
         while ((line = br.readLine()) != null) {
             // Split the line by :
@@ -63,11 +65,10 @@ public class NpcList {
                 final String key = TextUtil.cleanDialogue(NpcList.stripQuotes(parts[1]));
                 final String name = NpcList.stripQuotes(parts[1]);
 
-                //NpcList.strings.put("_"+key, name + "{" + name.length() + "}");
-
                 // Check if provided name is valid
                 if (key != null && name != null && name.length() < 250 && name.matches("^[a-zA-Z0-9_]+$")) {
-                    NpcList.strings.put(TextUtil.cleanDialogue(key), name);
+                    NpcList.strings.put(key, name);
+                    character.put(key, name);
                 }
             }
         }
