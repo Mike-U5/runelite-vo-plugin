@@ -35,7 +35,7 @@ public class NpcVoPlugin extends Plugin {
 
     @Override
     protected void startUp() {
-        printMap(NpcList.strings);
+        // Startup
     }
 
     private void printMap(final Map map) {
@@ -85,12 +85,16 @@ public class NpcVoPlugin extends Plugin {
         ///}
 
         if (modelID >= 0) {
-            final ActorBase character = NpcList.actors.get(modelID);
+            final Map<String, String> character = NpcList.actors.get(modelID);
             if (character != null) {
-                final String voiceClip = character.getVo(text);
+                final String voiceClip = character.get(text);
                 if (voiceClip != null) {
                     this.playSound(voiceClip);
+                } else {
+                    this.debugChatMessage("Voicelip not found: " + text);
                 }
+            } else {
+                this.debugChatMessage("Character not found: " + modelID);
             }
         }
     }

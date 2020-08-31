@@ -1,8 +1,5 @@
 package net.runelite.client.plugins.npcvo;
 
-import net.runelite.api.NpcID;
-import net.runelite.client.plugins.npcvo.actors.*;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -10,14 +7,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: Use JSON instead?
-
 public class NpcList {
     private static final String BASE_PATH = "runelite-client/src/main/java/net/runelite/client/plugins/npcvo/vo/";
     private static final String ACT_FILE = "/act.txt";
-    public static final HashMap<String, String> strings = new HashMap();
+    public static final Map<Integer, Map<String, String>> actors = new HashMap<>();
 
-    public static HashMap<Integer, ActorBase> actors = new HashMap<>();
     static {
         final File folder = new File(BASE_PATH);
         for (final File entry : folder.listFiles()) {
@@ -32,14 +26,6 @@ public class NpcList {
                 }
             }
         }
-    }
-    static {
-        actors.put(NpcID.COOK_4626, new LumbyCook());
-        actors.put(NpcID.ACHIETTIES, new Achietties());
-        actors.put(NpcID.GAIUS, new Gaius());
-        actors.put(NpcID.TEGID, new Tegid());
-        actors.put(NpcID.TRAIBORN, new Traiborn());
-        actors.put(NpcID.PROFESSOR_ONGLEWIP, new ProfessorOnglewip());
     }
 
     private static String stripQuotes(final String _str) {
@@ -67,11 +53,12 @@ public class NpcList {
 
                 // Check if provided name is valid
                 if (key != null && name != null && name.length() < 250 && name.matches("^[a-zA-Z0-9_]+$")) {
-                    NpcList.strings.put(key, name);
                     character.put(key, name);
                 }
             }
         }
+
+        NpcList.actors.put(id, character);
     }
 
 }
