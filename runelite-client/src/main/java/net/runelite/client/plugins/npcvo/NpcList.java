@@ -21,11 +21,11 @@ public class NpcList {
     static {
         final File folder = new File(BASE_PATH);
         for (final File entry : folder.listFiles()) {
-            if (entry.isDirectory()) {
+            if (entry.isDirectory() && entry.getName().matches("[0-9]+")) {
                 final File file = new File(BASE_PATH + entry.getName() + ACT_FILE);
                 if (file.exists()) {
                     try {
-                        parseJson(file);
+                        parseJson(file, Integer.parseInt(entry.getName()));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -52,7 +52,7 @@ public class NpcList {
         return null;
     }
 
-    private static void parseJson(final File file) throws IOException {
+    private static void parseJson(final File file, int id) throws IOException {
         String line = null;
 
         // Init Buffered Reader
