@@ -14,6 +14,8 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 
 import javax.inject.Inject;
+import java.util.Iterator;
+import java.util.Map;
 
 @PluginDescriptor(
     name = "Voice Acting Plugin",
@@ -30,6 +32,23 @@ public class NpcVoPlugin extends Plugin {
     private Thread sndThread;
     private RunnableSndPlayer sndPlayer;
     private boolean newDialogueOpened = false;
+
+    @Override
+    protected void startUp()
+    {
+        printMap(NpcList.strings);
+    }
+
+    private void printMap(final Map map) {
+        final Iterator it = map.entrySet().iterator();
+        while (it.hasNext()) {
+            final Map.Entry pair = (Map.Entry)it.next();
+            ///this.debugChatMessage(pair.getKey() + " = " + pair.getValue());
+            this.debugChatMessage((String) pair.getValue());
+            it.remove(); // avoids a ConcurrentModificationException
+        }
+        this.debugChatMessage("~~ " + map.size() + " ~~");
+    }
 
     // Tracks if a new NPC Dialogue box was opened
     // Calling getWidget here doesn't work, so we do that in onGameTick

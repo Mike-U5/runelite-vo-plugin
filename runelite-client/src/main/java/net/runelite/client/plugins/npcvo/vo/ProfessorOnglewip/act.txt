@@ -1,0 +1,3 @@
+"Oh no, I come from the Gnome Stronghold. I've been sent here by King Narnode to learn about human magics.": "talk1"
+"It's in the North West of the continent - a long way away. You should visit us there some time. The food's great, and the company's delightful.": "talk2"
+"Well, it's full of gnomes. How much nicer could it be?": "talk3"
