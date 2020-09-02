@@ -28,12 +28,13 @@ public class NpcList {
         }
     }
 
-    private static String stripQuotes(final String _str) {
+    private static String getTextBetweenQuotes(final String _str) {
         final String str = _str.trim();
-        if (str.charAt(0) == '"' && str.charAt(str.length() - 1) == '"') {
+        return str.substring(1, str.length() - 1);
+        /**if (str.charAt(0) == '"' && str.charAt(str.length() - 1) == '"') {
             return str.substring(1, str.length() - 1);
         }
-        return null;
+        return null;**/
     }
 
     private static void parseJson(final File file, int id) throws IOException {
@@ -46,14 +47,14 @@ public class NpcList {
         while ((line = br.readLine()) != null) {
             // Split the line by :
             final String[] parts = line.split(":(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"); // Thanks Rohit Jain
-            // Should produce two parts, if not line is not correct and should be skipped
+            // Should produce two parts, if not line is not correctly formatted and should be skipped
             if (parts.length == 2) {
-                final String key = TextUtil.cleanDialogue(NpcList.stripQuotes(parts[1]));
-                final String name = NpcList.stripQuotes(parts[1]);
+                final String key = NpcList.getTextBetweenQuotes(parts[0]);
+                final String name = NpcList.getTextBetweenQuotes(parts[1]);
 
                 // Check if provided name is valid
-                if (key != null && name != null && name.length() < 250 && name.matches("^[a-zA-Z0-9_]+$")) {
-                    character.put(key, name);
+                if (key != null && name != null) {
+                    character.put(TextUtil.crushDialogue(key), name);
                 }
             }
         }

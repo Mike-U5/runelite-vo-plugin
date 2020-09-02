@@ -19,7 +19,8 @@ public class RunnableSndPlayer implements Runnable {
     @SneakyThrows
     @Override
     public void run() {
-        final FileInputStream fis = new FileInputStream(BASE_PATH + this.sndPath + FILE_EXT);
+        final String path = BASE_PATH + this.sndPath + FILE_EXT;
+        final FileInputStream fis = new FileInputStream(path);
         this.audioPlayer = new Player(fis);
         this.audioPlayer.play();
     }

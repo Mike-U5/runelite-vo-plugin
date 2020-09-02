@@ -1,7 +1,11 @@
 package net.runelite.client.plugins.npcvo;
 
 public class TextUtil {
-    public static String cleanDialogue(String str) {
-        return str.replaceAll("<.*?>", " ").trim();
+    // Strip most non-alphanumeric chars from dialog string before comparing
+    public static String crushDialogue(String str) {
+        str = str.replaceAll("<.*?>", "");
+        str = str.replaceAll("[^a-zA-Z0-9]", "");
+        str = str.toLowerCase();
+        return str;
     }
 }

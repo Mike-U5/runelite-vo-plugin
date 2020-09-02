@@ -35,14 +35,14 @@ public class NpcVoPlugin extends Plugin {
 
     @Override
     protected void startUp() {
-        // Startup
+        //this.printMap(NpcList.actors.get(2560));
     }
 
     private void printMap(final Map map) {
         final Iterator it = map.entrySet().iterator();
         while (it.hasNext()) {
             final Map.Entry pair = (Map.Entry)it.next();
-            this.debugChatMessage((String) pair.getValue());
+            this.debugChatMessage((String) pair.getKey());
             it.remove();
         }
         this.debugChatMessage("~~ " + map.size() + " ~~");
@@ -74,7 +74,7 @@ public class NpcVoPlugin extends Plugin {
         int modelID = -1;
 
         if (client.getWidget(WidgetInfo.DIALOG_NPC_TEXT) != null) {
-            text = TextUtil.cleanDialogue(client.getWidget(WidgetInfo.DIALOG_NPC_TEXT).getText());
+            text = TextUtil.crushDialogue(client.getWidget(WidgetInfo.DIALOG_NPC_TEXT).getText().trim());
         }
         if (client.getWidget(WidgetInfo.DIALOG_NPC_HEAD_MODEL) != null) {
             modelID = client.getWidget(WidgetInfo.DIALOG_NPC_HEAD_MODEL).getModelId();
@@ -89,12 +89,14 @@ public class NpcVoPlugin extends Plugin {
             if (character != null) {
                 final String voiceClip = character.get(text);
                 if (voiceClip != null) {
-                    this.playSound(voiceClip);
+                    this.playSound(modelID + "/" + voiceClip);
                 } else {
                     this.debugChatMessage("Voicelip not found: " + text);
+                    this.debugChatMessage("In List:");
+                    this.printMap(character);
                 }
             } else {
-                this.debugChatMessage("Character not found: " + modelID);
+                this.debugChatMessage("NPC ID not found: " + modelID);
             }
         }
     }
@@ -108,6 +110,7 @@ public class NpcVoPlugin extends Plugin {
 
     // Play a new sound
     private void playSound(String sndPath) {
+        this.debugChatMessage("Playing:" + sndPath);
         this.stopSound();
         this.sndPlayer = new RunnableSndPlayer();
         this.sndPlayer.setVOLine(sndPath);
